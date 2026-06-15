@@ -9,7 +9,7 @@ export async function uploadAudio(audioBlob: Blob) {
   );
 
   const response = await fetch(
-    "http://127.0.0.1:5000/transcribe",
+    `${process.env.NEXT_PUBLIC_API_URL}/transcribe`,
     {
       method: "POST",
       body: formData,
