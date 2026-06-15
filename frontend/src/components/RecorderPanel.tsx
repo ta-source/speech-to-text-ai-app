@@ -100,10 +100,13 @@ const [translationLoading, setTranslationLoading] =
         setTranscript("");
         setSeconds(0);
         const SpeechRecognition =
-            (window as any)
-               .SpeechRecognition ||
-            (window as any)
-               .webkitSpeechRecognition;
+            (window as any).SpeechRecognition ||
+             (window as any).webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+         alert("Speech Recognition is not supported on this device.");
+            return;
+        }
 
         const recognition =
             new SpeechRecognition();
@@ -297,7 +300,7 @@ mediaRecorder.ondataavailable =
         setSummaryLoading(true);
       const response =
         await fetch(
-          "http://127.0.0.1:5000/summary",
+      `${process.env.NEXT_PUBLIC_API_URL}/summary`,
           {
             method: "POST",
             headers: {
@@ -322,7 +325,7 @@ mediaRecorder.ondataavailable =
         console.error(error);
 
     }   finally {
-            setTranslationLoading(false);
+            setSummaryLoading(false);
     }
 
 
@@ -335,7 +338,7 @@ mediaRecorder.ondataavailable =
 
             const response =
                 await fetch(
-                "http://127.0.0.1:5000/translate",
+                `${process.env.NEXT_PUBLIC_API_URL}/translate`,
                         {
                             method: "POST",
                             headers: {
@@ -423,7 +426,7 @@ mediaRecorder.ondataavailable =
     setEmailLoading(true);
     const response =
       await fetch(
-        "http://127.0.0.1:5000/email",
+            `${process.env.NEXT_PUBLIC_API_URL}/email`,
         {
           method: "POST",
           headers: {

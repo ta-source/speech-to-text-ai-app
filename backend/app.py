@@ -38,14 +38,18 @@ from services.speech_service import (
     transcribe_audio
 )
 
-app = Flask(__name__)
-CORS(app)
+from flask_cors import CORS
 
+app = Flask(__name__)
+
+CORS(
+    app,
+    resources={r"/*": {"origins": "*"}}
+)
 socketio = SocketIO(
     app,
     cors_allowed_origins="*"
 )
-
 # Database Configuration
 app.config.from_object(Config)
 
