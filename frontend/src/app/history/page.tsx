@@ -20,7 +20,7 @@ export default function HistoryPage() {
   const fetchHistory = async () => {
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/history"
+        "process.env.NEXT_PUBLIC_API_URL/history"
       );
 
       const data = await response.json();
@@ -36,7 +36,7 @@ export default function HistoryPage() {
   ) => {
     try {
       await fetch(
-        `http://127.0.0.1:5000/transcript/${id}`,
+        `process.env.NEXT_PUBLIC_API_URL/transcript/${id}`,
         {
           method: "DELETE",
         }
@@ -50,7 +50,7 @@ export default function HistoryPage() {
 
   const downloadPDF = () => {
     window.open(
-      "http://127.0.0.1:5000/export-pdf",
+      "process.env.NEXT_PUBLIC_API_URL/export-pdf",
       "_blank"
     );
   };
