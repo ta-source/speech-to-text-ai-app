@@ -1,34 +1,19 @@
 import requests
+import google.generativeai as genai
+import os
 
 # ==========================================
 # GEMMA 3 COMMON FUNCTION
 # ==========================================
+genai.configure(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
-def ask_gemma(prompt):
+model = genai.GenerativeModel(
+    "gemini-1.5-flash"
+)
 
-    try:
 
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={
-                "model": "gemma3:4b",
-                "prompt": prompt,
-                "stream": False
-            }
-        )
-
-        result = response.json()
-
-        return result["response"]
-
-    except Exception as e:
-
-        print("=" * 40)
-        print("OLLAMA ERROR")
-        print(e)
-        print("=" * 40)
-
-        return "AI service unavailable."
 
 
 # ==========================================
