@@ -122,7 +122,7 @@ def transcribe():
     return jsonify({
         "status": "success",
         "original": text,
-        "transcript": text
+        "transcript": corrected_text
     })
 
 

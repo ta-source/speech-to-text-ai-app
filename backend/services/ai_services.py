@@ -1,30 +1,41 @@
-import requests
-import google.generativeai as genai
+from groq import Groq
 import os
 
-# ==========================================
-# GEMMA 3 COMMON FUNCTION
-# ==========================================
-genai.configure(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
-
-model = genai.GenerativeModel(
-    "gemini-1.5-flash"
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 
+def ask_ai(prompt):
 
+    try:
 
-# ==========================================
-# GRAMMAR CORRECTION
-# ==========================================
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+
+        print("=" * 40)
+        print("GROQ ERROR")
+        print(str(e))
+        print("=" * 40)
+
+        return "AI service unavailable."
+
 
 def correct_transcript(text):
 
     prompt = f"""
-Correct grammar, punctuation,
-and spelling errors.
+Correct grammar, punctuation and spelling errors.
 
 Return only corrected text.
 
@@ -32,12 +43,8 @@ Text:
 {text}
 """
 
-    return ask_gemma(prompt)
+    return ask_ai(prompt)
 
-
-# ==========================================
-# AI SUMMARY
-# ==========================================
 
 def summarize_transcript(text):
 
@@ -50,29 +57,20 @@ Transcript:
 {text}
 """
 
-    return ask_gemma(prompt)
+    return ask_ai(prompt)
 
-
-# ==========================================
-# EMAIL GENERATOR
-# ==========================================
 
 def generate_email(text):
 
     prompt = f"""
-Convert the following text into
-a professional email.
+Convert the following text into a professional email.
 
 Text:
 {text}
 """
 
-    return ask_gemma(prompt)
+    return ask_ai(prompt)
 
-
-# ==========================================
-# TRANSLATION
-# ==========================================
 
 def translate_text(text, language):
 
@@ -85,4 +83,4 @@ Text:
 {text}
 """
 
-    return ask_gemma(prompt)
+    return ask_ai(prompt)
