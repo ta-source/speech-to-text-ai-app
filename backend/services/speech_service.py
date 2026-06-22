@@ -1,29 +1,19 @@
-from faster_whisper import WhisperModel
+from groq import Groq
+import os
 
-print("Loading Whisper Model...")
-
-model = WhisperModel(
-    "tiny.en",
-    device="cpu",
-    compute_type="int8"
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
 )
-
-print("Whisper Loaded")
-
 
 def transcribe_audio(audio_path):
 
-    print(f"Processing file: {audio_path}")
+    with open(audio_path, "rb") as audio_file:
 
-    segments, info = model.transcribe(
-        audio_path
-    )
+        transcription = (
+            client.audio.transcriptions.create(
+                file=audio_file,
+                model="whisper-large-v3"
+            )
+        )
 
-    text = ""
-
-    for segment in segments:
-        text += segment.text + " "
-
-    print("TRANSCRIPTION COMPLETE")
-
-    return text.strip()
+    return transcription.text
