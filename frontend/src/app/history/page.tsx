@@ -30,11 +30,11 @@ export default function HistoryPage() {
   };
 
   const deleteTranscript = async (
-    id: number
-  ) => {
-    try {
+  id: number
+) => {
+  try {
 
-      const response = await fetch(
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/transcript/${id}`,
       {
         method: "DELETE",
@@ -48,9 +48,7 @@ export default function HistoryPage() {
     fetchHistory();
 
   } catch (error) {
-
     console.error(error);
-
   }
 };
 
