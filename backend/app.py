@@ -77,53 +77,50 @@ def home():
     })
 
 
-@app.route(
-    "/transcribe",
-    methods=["POST"]
-)
+@app.route("/transcribe", methods=["POST"])
 def transcribe():
 
-    file = request.files.get(
-        "file"
-    )
+    try:
 
-    if not file:
+        file = request.files.get("file")
+
+        if not file:
+            return jsonify({
+                "error": "No file uploaded"
+            }), 400
+
+        filepath = os.path.join(
+            UPLOAD_FOLDER,
+            file.filename
+        )
+
+        file.save(filepath)
+
+        text = transcribe_audio(filepath)
+
+        # TEMPORARY
+        corrected_text = text
+
+        new_transcript = Transcript(
+            text=corrected_text
+        )
+
+        db.session.add(new_transcript)
+        db.session.commit()
 
         return jsonify({
-            "error":
-                "No file uploaded"
-        }), 400
+            "status": "success",
+            "original": text,
+            "transcript": corrected_text
+        })
 
-    filepath = os.path.join(
-        UPLOAD_FOLDER,
-        file.filename
-    )
+    except Exception as e:
 
-    file.save(filepath)
+        print("TRANSCRIBE ERROR:", str(e))
 
-    # Convert speech to text
-    text = transcribe_audio(
-        filepath
-    )
-    corrected_text = correct_transcript(
-        text
-    )
-    # Save transcript
-    new_transcript = Transcript(
-        text=corrected_text
-    )
-
-    db.session.add(
-        new_transcript
-    )
-
-    db.session.commit()
-
-    return jsonify({
-        "status": "success",
-        "original": text,
-        "transcript": corrected_text
-    })
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 
 @app.route("/history")

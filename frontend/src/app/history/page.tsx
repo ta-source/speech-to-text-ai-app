@@ -33,26 +33,33 @@ export default function HistoryPage() {
     id: number
   ) => {
     try {
-      await fetch(
-        `process.env.NEXT_PUBLIC_API_URL/transcript/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
 
-      fetchHistory();
-    } catch (error) {
-      console.error(error);
+      const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/transcript/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Delete failed");
     }
-  };
+
+    fetchHistory();
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+};
 
   const downloadPDF = () => {
     window.open(
-      "process.env.NEXT_PUBLIC_API_URL/export-pdf",
-      "_blank"
+        `${process.env.NEXT_PUBLIC_API_URL}/export-pdf`,
+        "_blank"
     );
   };
-
   const filteredHistory = history.filter(
     (item) =>
       item.text
